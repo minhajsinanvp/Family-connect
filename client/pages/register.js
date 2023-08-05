@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { Modal } from "antd"
 import Link from "next/link";
 import AuthenForm from "../components/AuthenForm";
+import { useRouter } from "next/router";
+import { userContext } from "../context";
 
 
 
@@ -15,6 +17,13 @@ const Register = () => {
     const [secret, setSecret] = useState("");
     const [ok, setOk] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [state, setState] = useContext(userContext);
+    const router = useRouter()
+
+    if (state && state.token) {
+        router.push("/")
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,7 +77,7 @@ const Register = () => {
                         setPassword={setPassword}
                         secret={secret}
                         setSecret={setSecret}
-                        loading = {loading}
+                        loading={loading}
                     />
                 </div>
             </div>

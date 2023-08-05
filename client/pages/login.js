@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { Modal } from "antd"
@@ -20,8 +20,13 @@ const Login = () => {
 
 
     const [state, setState] = useContext(userContext)
-
     const router = useRouter()
+
+
+    if(state && state.token ){
+        router.push("/")
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

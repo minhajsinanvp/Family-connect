@@ -1,18 +1,27 @@
 import { useContext } from "react"
-import { userContext } from "../context"
+import { userContext } from "../context";
+import UserRoute from "../components/routes/userRoute";
+
+
 
 
 function dashboard() {
 
-    const [state,setState] = useContext(userContext)
+
   return (
-    <div className="container ">
+
+    <UserRoute>
+       <div className="container ">
         <div className="row">
-            <div className="col display-1 text-center">
-                Dashboard page
-            </div>
+          <div className="col display-1 text-center">
+            Dashboard page
+          </div>
         </div>
-    </div>
+      </div>
+    </UserRoute>
+
+     
+
   )
 }
 

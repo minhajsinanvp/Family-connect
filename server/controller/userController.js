@@ -1,6 +1,7 @@
 const { passwordHash, comparePassword } = require("../helpers/hasPassword");
 const User = require("../models/userSchema");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const {expressjwt} = require("express-jwt");
 
 
 
@@ -76,7 +77,7 @@ module.exports.login = async (req, res) => {
         if (!match) return res.status(400).json("Incorrect password")
 
 
-        const token = jwt.sign({ _id: user._id }, process.env.jwt_secret, { expiresIn: '1D' })
+        const token = jwt.sign({ _id: user._id }, process.env.jwt_secret, { expiresIn: '1200 ' })
         user.password = undefined;
         user.secret = undefined;
 
@@ -91,5 +92,21 @@ module.exports.login = async (req, res) => {
         res.status(400).send("Error on Login try again later")
     }
 
+
+}
+
+
+
+module.exports.loggedUser = async(req,res) =>{
+    const UserSignId = req.auth._id;
+
+
+    try {
+        const userData = await User.findById(UserSignId)
+        // res.json(userData)
+        res.json({ok: true})
+    } catch (error) {
+        res.sendStatus(400)
+    }
 
 }
