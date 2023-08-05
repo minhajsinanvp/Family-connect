@@ -47,9 +47,9 @@ const Login = () => {
 
 
             window.localStorage.setItem('auth', JSON.stringify(data))
-            
-            toast.success("User logged in")
             setLoading(false)
+            toast.success("User logged in")
+            
             // console.log(state);
             router.push("/")
        

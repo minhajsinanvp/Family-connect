@@ -8,7 +8,7 @@ const Home = () => {
             <div className="row">
                 <div className="col">
                     <h1 className="display-1 text-center py-5">Connet You</h1>
-                    {JSON.stringify(state)}
+                    {/* {JSON.stringify(state)} */}
                     <img src="/images/bird.jpg" alt="" />
                 </div>
             </div>
