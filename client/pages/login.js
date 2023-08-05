@@ -3,8 +3,11 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import { Modal } from "antd"
 import Link from "next/link";
+import { useContext } from "react"; 
 import AuthenForm from "../components/AuthenForm";
 import {useRouter} from "next/router"
+import { userContext } from "../context";
+
 
 
 
@@ -14,6 +17,9 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+
+
+    const [state, setState] = useContext(userContext)
 
     const router = useRouter()
 
@@ -30,12 +36,23 @@ const Login = () => {
                 
             })
 
-            console.log(data);
+            // console.log(data);
+            
+            setState({
+                user: data.user,
+                token: data.token
+            })
+
+            //saving in local storage
+
+
+            window.localStorage.setItem('auth', JSON.stringify(data))
             
             toast.success("User logged in")
             setLoading(false)
-            // router.push("/")
-            // redirect("/login")
+            // console.log(state);
+            router.push("/")
+       
 
 
         } catch (error) {

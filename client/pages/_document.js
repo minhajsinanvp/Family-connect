@@ -1,9 +1,12 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import { UserProvider } from '../context'
+
 
  
 export default function Document() {
   return (
-    <Html>
+    <UserProvider>
+      <Html>
       <Head>
         <link rel="stylesheet" href="/css/style.css" />
       </Head>
@@ -12,5 +15,6 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
+    </UserProvider>
   )
 }
