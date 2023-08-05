@@ -77,7 +77,7 @@ module.exports.login = async (req, res) => {
         if (!match) return res.status(400).json("Incorrect password")
 
 
-        const token = jwt.sign({ _id: user._id }, process.env.jwt_secret, { expiresIn: '1200 ' })
+        const token = jwt.sign({ _id: user._id }, process.env.jwt_secret, { expiresIn: '7D' })
         user.password = undefined;
         user.secret = undefined;
 
