@@ -85,7 +85,7 @@ const Register = () => {
                 <div className="col">
                     <Modal
                         title="User Created Sucessfully"
-                        visible={ok}
+                        open={ok}
                         onCancel={() => setOk(false)}
                         footer={null}>
 
@@ -97,7 +97,7 @@ const Register = () => {
             </div>
             <div className="row">
                 <div className="col">
-                    <div className="text-center">Alreadt registered? <Link href="/login">Login</Link></div>
+                    <div className="text-center">Already registered? <Link href="/login">Login</Link></div>
                 </div>
             </div>
         </div>
