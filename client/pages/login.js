@@ -34,7 +34,7 @@ const Login = () => {
 
         try {
             setLoading(true)
-            const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API}/login`, {
+            const {data} = await axios.post(`/login`, {
     
                 email,
                 password,
@@ -99,6 +99,14 @@ const Login = () => {
                     <div className="text-center"> New user? <Link href="/register">Register here</Link></div>
                 </div>
             </div>
+
+            <div className="row">
+                <div className="col">
+                    <div className="text-center"><Link href="/forgotpassword">Fogot password</Link></div>
+                </div>
+            </div>
+            
+            
         </div>
     )
 }
