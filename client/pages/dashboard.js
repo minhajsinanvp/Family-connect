@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { userContext } from "../context";
 import UserRoute from "../components/routes/userRoute";
 import CreatePost from "../components/CreatePost";
@@ -18,17 +18,8 @@ function dashboard() {
   const [content, setContent] = useState("")
 
   const router = useRouter()
+  
 
-
-  useEffect(()=>{
-
-    loggedUser()
-
-  },[])
-
-  const loggedUser = () =>{
-    
-  }
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();

@@ -2,46 +2,56 @@ import axios from "axios";
 import Router from "next/router";
 import { useState, createContext, useEffect } from "react";
 
+
+
 const userContext = createContext();
 
-const UserProvider = ({ children }) => {
-    const [state, setState] = useState({
+
+
+
+
+const UserProvider = ({children}) =>{
+    const [state,setState] = useState({
         user: {},
-        token: ""
-    });
+        token : ""
+    })
 
-    useEffect(() => {
-        const storedAuth = JSON.parse(window.localStorage.getItem('auth'));
-        setState(storedAuth);
+    // grabbing the token and user from local storage
+    useEffect(()=>{
 
-        if (storedAuth && storedAuth.token) {
-            axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
-            axios.defaults.headers.common["Authorization"] = `Bearer ${storedAuth.token}`;
-        }
+        setState(JSON.parse(window.localStorage.getItem('auth')))
+        axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-        // Optional: You can add an interceptor to handle response errors globally
-        axios.interceptors.response.use(
-            function (response) {
-                return response;
-            },
-            function (error) {
-                let res = error.response;
-                if (res && (res.status === 401 || res.status === 403)) {
-                    setState(null);
-                    window.localStorage.removeItem('auth');
-                    Router.push("/login");
-                }
-                return Promise.reject(error);
-            }
-        );
+    },[])
 
-    }, []);
+    const token = state && state.token ? state.token : "";
+
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+
+    // axios.interceptors.response.use(function (response) {
+    //     // Do something before request is sent
+    //     return response;
+    //   }, function (error) {
+    //     // Do something with request error
+    //     let res = error.response;
+       
+
+    //         setState(null);
+    //         window.localStorage.removeItem('auth');
+    //         // Router.push("/login")    
+
+        
+    //   } )
 
     return (
         <userContext.Provider value={[state, setState]}>
+
             {children}
         </userContext.Provider>
-    );
-}
+    )
+} 
+  
 
-export { userContext, UserProvider };
+export {userContext, UserProvider};
