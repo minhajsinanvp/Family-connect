@@ -5,7 +5,6 @@ import CreatePost from "../components/CreatePost";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { Form } from "antd";
 
 
 
@@ -29,12 +28,12 @@ function dashboard() {
         content,
       });
 
-
+      
       // Handle the response or navigate to another page if needed
-      if (response.data.error) {
+      if(response.data.error){
         toast.error(response.data.error)
       }
-      else {
+      else{
         toast.success(response.data.success)
       }
 
@@ -50,22 +49,6 @@ function dashboard() {
     }
   };
 
-
-  const handleImage = async (e) => {
-
-    const file = e.target.files[0];
-
-    let formData = new FormData()
-    formData.append("image", file)
-    console.log([...formData]);
-
-    try {
-      const response = await axios.post("/image-upload", formData)
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
 
 
   return (
@@ -84,7 +67,6 @@ function dashboard() {
               handlePostSubmit={handlePostSubmit}
               content={content}
               setContent={setContent}
-              handleImage={handleImage}
             />
           </div>
           <div className="col-md-4">sidebar</div>
