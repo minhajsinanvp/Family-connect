@@ -1,5 +1,6 @@
 const { passwordHash, comparePassword } = require("../helpers/hasPassword");
 const User = require("../models/userSchema");
+const Post = require("../models/postSchema");
 const jwt = require('jsonwebtoken');
 const { expressjwt } = require("express-jwt");
 
@@ -178,4 +179,34 @@ module.exports.passwordRecovery = async (req, res) => {
 
 
 
+}
+
+
+
+module.exports.creatPost = async(req,res)=>{
+//    
+    // console.log(req.header('authorization'));
+
+   
+    
+    const {content} = req.body;
+
+    if(!content) return res.json({error: "content cant be empty"})
+
+    try  {
+
+        const post = new Post ({
+            content,
+            userId : req.auth._id,
+        }) 
+
+        post.save();
+        res.json({success : "Post created successfully", post})
+
+        
+    } catch (error) {
+        return res.json({error : "Some thing went wrong try again"})
+    }
+
+    
 }

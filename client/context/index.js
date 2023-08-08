@@ -20,6 +20,8 @@ const UserProvider = ({children}) =>{
     useEffect(()=>{
 
         setState(JSON.parse(window.localStorage.getItem('auth')))
+        axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
     },[])
 
@@ -28,20 +30,20 @@ const UserProvider = ({children}) =>{
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-    axios.interceptors.response.use(function (response) {
-        // Do something before request is sent
-        return response;
-      }, function (error) {
-        // Do something with request error
-        let res = error.response;
+    // axios.interceptors.response.use(function (response) {
+    //     // Do something before request is sent
+    //     return response;
+    //   }, function (error) {
+    //     // Do something with request error
+    //     let res = error.response;
        
 
-            setState(null);
-            window.localStorage.removeItem('auth');
-            // Router.push("/login")    
+    //         setState(null);
+    //         window.localStorage.removeItem('auth');
+    //         // Router.push("/login")    
 
         
-      } )
+    //   } )
 
     return (
         <userContext.Provider value={[state, setState]}>
