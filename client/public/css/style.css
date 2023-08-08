@@ -16,5 +16,17 @@ body{
     font-size: large !important;
 }
 
+.react-quill:focus {
+    border: none;
+    outline: none;
+}
+/* .post-heading{
+    color: black;
+    font-size: larger;
+    font-weight: 600;
+}
 
 
+.post-content{
+    background-color: #b0aeae;
+} */

@@ -1,20 +1,17 @@
 const express = require('express');
-const { register, login, loggedUser, passwordRecovery, creatPost } = require('../controller/userController');
+const formidable = require("express-formidable");
+
+const { register, login, loggedUser, passwordRecovery, creatPost, imageUpload } = require('../controller/userController');
 const { checkingToken } = require('../middlewares/authen');
 
 const router = express.Router();
 
+router.post("/register", register );
+router.post("/login", login);
+router.get("/loggedUser", checkingToken(), loggedUser); // Apply checkingToken middleware here
+router.post("/forgotpassword", passwordRecovery);
+router.post("/create-post", checkingToken(), creatPost); // Apply checkingToken middleware here
+router.post("/image-upload", checkingToken(), formidable(), imageUpload); // Apply checkingToken middleware here
 
-
-
-
-
-router.post("/register", register )
-router.post("/login", login)
-router.get("/loggedUser",checkingToken(),loggedUser)
-router.post("/forgotpassword",passwordRecovery)
-router.post("/create-post",checkingToken(), creatPost)
-
-
-
-module.exports = router
+module.exports = router;
+ 

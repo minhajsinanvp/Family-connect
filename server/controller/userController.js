@@ -214,5 +214,6 @@ module.exports.creatPost = async(req,res)=>{
 
 
 module.exports.imageUpload = async(req,res) =>{
-    console.log(object);
+    console.log(req.files);
+    console.log("hello");
 }
