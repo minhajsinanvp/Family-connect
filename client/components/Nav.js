@@ -33,7 +33,7 @@ const Nav = () => {
                 <div>
                     {state && (
                         <>
-                            <Link  href="/dashboard" className={`text-decoration-none ${path === '/dashboard' ? 'active' : 'text-light'}` }>{state.user.name}</Link>
+                            <Link  href="/user/dashboard" className={`text-decoration-none ${path === '/dashboard' ? 'active' : 'text-light'}` }>{state.user.name}</Link>
                             <a onClick={logout} href="/login" className=' mx-4 text-decoration-none text-light' >Logout</a>
                         </>
                     )}

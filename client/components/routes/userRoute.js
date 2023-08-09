@@ -17,7 +17,7 @@ function userRoute({ children }) {
     const[state,setState] = useContext(userContext)
 
     useEffect(() => {
-        getCurrentUser()
+        if(state.token) getCurrentUser()
     }, [state && state.token])
 
 
@@ -25,7 +25,7 @@ function userRoute({ children }) {
 
         try {
 
-            const {data} = await axios.get(`/loggedUser`)
+            const {data} = await axios.get(`/logged-user`)
 
             if(data.ok)
             {
@@ -39,9 +39,9 @@ function userRoute({ children }) {
 
     }
 
-     process.browser && state === null && setTimeout(()=> {
-        getCurrentUser()
-     },1000)
+    //  process.browser && state === null && setTimeout(()=> {
+    //     getCurrentUser()
+    //  },1000)
     return !ok ? (<LoadingOutlined spin className="d-flex justify-content-center display-1 text-primary p-5"/>) : (<>{children}</>)
     
 }

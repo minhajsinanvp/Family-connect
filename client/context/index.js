@@ -14,36 +14,48 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         // Parse auth data from local storage
         const authData = JSON.parse(window.localStorage.getItem('auth'));
+        // console.log(authData);
         setState(authData);
+        const token = state && state.token ? state.token : "";
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+ 
+
 
         // Set default Axios configuration
-        axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
-        axios.defaults.headers.common["Authorization"] = `Bearer ${authData.token}`;
-    }, []);
+
+    }, [state && state.token]);
+
 
     const token = state && state.token ? state.token : "";
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+
+
 
     // Commented out this line since it's already set in the useEffect above
     // axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
     // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     // Enable this interceptor to handle response errors
-    axios.interceptors.response.use(
-        function (response) {
-            return response;
-        },
-        function (error) {
-            let res = error.response;
+    // axios.interceptors.response.use(
+    //     function (response) {
+    //         return response;
+    //     },
+    //     function (error) {
+    //         let res = error.response;
 
-            if (res.status === 401) { // Unauthorized
-                setState(null);
-                window.localStorage.removeItem('auth');
-                Router.push("/login");
-            }
+    //         if (res.status === 401) { // Unauthorized
+    //             setState(null);
+    //             window.localStorage.removeItem('auth');
+    //             Router.push("/login");
+    //         }
 
-            return Promise.reject(error);
-        }
-    );
+    //         return Promise.reject(error);
+    //     }
+    // );
 
     return (
         <userContext.Provider value={[state, setState]}>

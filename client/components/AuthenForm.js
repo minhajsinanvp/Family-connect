@@ -1,7 +1,9 @@
 import { LoadingOutlined } from "@ant-design/icons"
 
 const AuthenForm = ({
-    handleSubmit, name, setName,
+    handleSubmit,
+    name, 
+    setName,
     email,
     setEmail,
     password,
@@ -13,11 +15,11 @@ const AuthenForm = ({
 }) => {
     return (
         <form onSubmit={handleSubmit}>
-            {page !== "login" && 
-            <div className="form-group p-2">
-                <label htmlFor="" className="text-muted">Your name</label>
-                <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Enter name" />
-            </div>
+            {page !== "login" &&
+                <div className="form-group p-2">
+                    <label htmlFor="" className="text-muted">Your name</label>
+                    <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Enter name" />
+                </div>
             }
 
             <div className="form-group p-2">
@@ -43,17 +45,17 @@ const AuthenForm = ({
 
             </div>
 
-            <div className="form-group p-2">
-                <input placeholder="Enter your secret" value={secret} onChange={e => setSecret(e.target.value)} type="text" className="form-control" />
-            </div>
+                <div className="form-group p-2">
+                    <input placeholder="Enter your secret" value={secret} onChange={e => setSecret(e.target.value)} type="text" className="form-control" />
+                </div>
             </>
-            
+
             }
 
             <div className="form-group p-2">
-                <button disabled={page !=="login" ? !name || !email || !password || !secret: !email || !password} style={{ color: "black", fontSize: "larger" }} className="btn btn-outline-primary w-100">
-                {loading ? <LoadingOutlined spin /> : (page !== "login" ? "Register" : "Login")}
-                
+                <button disabled={page !== "login" ? !name || !email || !password || !secret : !email || !password} style={{ color: "black", fontSize: "larger" }} className="btn btn-outline-primary w-100">
+                    {loading ? <LoadingOutlined spin /> : (page !== "login" ? "Register" : "Login")}
+
                 </button>
 
             </div>
