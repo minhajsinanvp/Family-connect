@@ -5,7 +5,7 @@ import { userContext } from "../../context";
 import userRoute from "../../components/routes/userRoute";
 import CreatePost from "../../components/CreatePost";
 import PostList from "../../components/PostList";
-
+import {toast} from "react-toastify"
 
 
 const EditPost = () => {
@@ -29,15 +29,12 @@ const EditPost = () => {
 
     const editPost = async () => {
         try {
-            
-            const {data} = await axios.put(`/edit-post/${id}`,{
-                content,
-                imageDetails
-            })
+
+            const {data} = await axios.get(`/edit-post/${id}`)
             setPost(data);
-            console.log(data.content);
+            // console.log(data.content);
             setContent(data.content)
-            setImageDetails(data.image)
+            setImageDetails(data.image)  
         } catch (error) {
             console.log(error);
         }
@@ -46,7 +43,18 @@ const EditPost = () => {
 
     const handlePostSubmit = async(e) => {
         e.preventDefault();
-       const response = await axios.post(`/update-post/${id}`) 
+       try {
+        const {data} = await axios.put(`/update-post/${id}`,{
+            content,
+            imageDetails
+        }) 
+        toast.success(data.success)
+        router.push("/user/dashboard")
+        
+        
+       } catch (error) {
+        console.log(error);
+       }
     }
 
 
@@ -107,7 +115,7 @@ const EditPost = () => {
                        
                         
                     </div>
-                    <pre>{JSON.stringify(post, null, 4)}</pre>
+                    {/* <pre>{JSON.stringify(post, null, 4)}</pre> */}
                   
                 </div>
             </div>

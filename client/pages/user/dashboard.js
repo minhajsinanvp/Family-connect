@@ -63,8 +63,9 @@ function dashboard() {
         toast.error(response.data.error)
       }
       else {
-        getPost();
+        
         toast.success(response.data.success)
+        getPost()
       }
 
       // Clear the content after successful post submission

@@ -4,6 +4,7 @@ const Post = require("../models/postSchema");
 const jwt = require('jsonwebtoken');
 const { expressjwt } = require("express-jwt");
 const cloudinary = require('cloudinary');
+const { post } = require("../routes/routing");
 
 cloudinary.config({
     cloud_name: process.env.cloudinaryname,
@@ -269,10 +270,51 @@ module.exports.editPost = async (req, res) => {
     try {
 
         const post = await Post.findById(req.params.id)
-        console.log(post);
+        // console.log(post);
         res.json(post)
 
     } catch (error) {
         res.json(error)
+    }
+}
+
+
+
+
+module.exports.updatePost = async(req,res)=>{
+
+    try {
+        console.log(req.body);
+        const image = req.body.imageDetails
+        // const post = await Post.findById(req.params.id)
+        // console.log(req.body.userId);
+
+        const updatedPost = await Post.findByIdAndUpdate(req.params.id,{content :req.body.content,image: req.body.imageDetails} ,{
+            new : true
+        })
+
+        return res.status(201).send({success : "Post updated"})
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+module.exports.deletePost = async(req,res)=>{
+    try {
+        const response = await Post.findByIdAndDelete(req.params.id)
+
+        if(response.image && response.image.public_id){
+            const img = await cloudinary.uploader.destroy(response.image.public_id)
+        }
+
+        return res.json({ok: true})
+        
+    } catch (error) {
+        console.log(error);
     }
 }

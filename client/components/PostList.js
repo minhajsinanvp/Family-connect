@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
-import { Avatar } from 'antd';
+import { Avatar, Modal, Button } from 'antd';
 import {
   HeartOutlined,
   CommentOutlined,
@@ -11,19 +11,58 @@ import {
 } from '@ant-design/icons';
 import { userContext } from '../context';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 function PostList({ postList }) {
   // console.log(postList);
 
   
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState(null);
   const [state, setState] = useContext(userContext)
 
   // console.log(postList[0]);
   // console.log(state);
 
   const router = useRouter()
+
+
+  const deletPostHandler = async(id) =>{
+    
+    try {
+     
+      
+      const {data} = await axios.delete(`/delete-post/${id}`)
+
+      if(data.ok){
+        toast.success("Post is deleted")
+
+       window.location.reload();
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const showModal = (id) => {
+    setModalVisible(true);
+    setPostIdToDelete(id);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setPostIdToDelete(null);
+  };
+
+  const confirmDelete = () => {
+    if (postIdToDelete) {
+      deletPostHandler(postIdToDelete);
+      closeModal();
+    }
+  };
   return (
     <div className="post-list-container">
       <div className="container">
@@ -42,7 +81,9 @@ function PostList({ postList }) {
 
               {(state.user && state.user._id) === post.userId._id && <>
                 <EditOutlined onClick={() => router.push(`/user/${post._id}`)} className="action-icon edit-icon" />
-                  <DeleteOutlined className="action-icon delete-icon" />
+                  <DeleteOutlined onClick={()=>{
+                    showModal(post._id)
+                  }} className="action-icon delete-icon" />
               </>}
 
                 </div>
@@ -65,6 +106,22 @@ function PostList({ postList }) {
               
             </div>
           ))}
+
+          <Modal
+          title="Confirm Delete"
+          open={modalVisible}
+          onCancel={closeModal}
+          footer={[
+            <Button key="back" onClick={closeModal}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="danger" onClick={confirmDelete}>
+              Delete
+            </Button>,
+          ]}
+        >
+          <p>Are you sure you want to delete this post?</p>
+        </Modal>
 
           {/* <pre>{JSON.stringify(postList, null , 4)}</pre> */}
       </div>
