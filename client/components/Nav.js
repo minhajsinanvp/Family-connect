@@ -29,12 +29,17 @@ const Nav = () => {
                     {state && (
                         <div className="dropdown">
                             <button className="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                {state.user && state.user.name}
+                                {state.user && state.user.userName ? state.user.userName : state.user.name}
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li>
                                     <Link href="/user/dashboard" className={`dropdown-item ${path === '/user/dashboard' ? 'active' : 'text-dark'}`}>
-                                        Profile
+                                        Dashboard
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/user/profile/update" className={`dropdown-item ${path === '/user/profile/update' ? 'active' : 'text-dark'}`}>
+                                        profile update
                                     </Link>
                                 </li>
                                 <li>

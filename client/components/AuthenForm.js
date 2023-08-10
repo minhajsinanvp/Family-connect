@@ -2,19 +2,40 @@ import { LoadingOutlined } from "@ant-design/icons"
 
 const AuthenForm = ({
     handleSubmit,
-    name, 
+    name,
     setName,
     email,
     setEmail,
+    about,
+    setAbout,
+   username,
+    setuserName,
     password,
     setPassword,
     secret,
     setSecret,
     loading,
-    page
+    page,
+    profileUpdate
 }) => {
     return (
         <form onSubmit={handleSubmit}>
+
+
+
+            {profileUpdate && <>
+                <div className="form-group p-2">
+                <label htmlFor="" className="text-muted">UserName</label>
+                <input value={username} onChange={e => setuserName(e.target.value)} type="text" className="form-control" placeholder="Enterusername" />
+            </div>
+
+            <div className="form-group p-2">
+                <label htmlFor="" className="text-muted">About</label>
+                <input value={about} onChange={e => setAbout(e.target.value)} type="text" className="form-control" placeholder="About you" />
+            </div>
+            </>}
+
+
             {page !== "login" &&
                 <div className="form-group p-2">
                     <label htmlFor="" className="text-muted">Your name</label>
@@ -24,7 +45,7 @@ const AuthenForm = ({
 
             <div className="form-group p-2">
                 <label htmlFor="" className="text-muted">Email address</label>
-                <input value={email} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="Enter email" />
+                <input disabled={profileUpdate} value={email} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="Enter email" />
             </div>
 
             <div className="form-group p-2">
@@ -53,10 +74,14 @@ const AuthenForm = ({
             }
 
             <div className="form-group p-2">
+                {profileUpdate ? <button disabled={ !name || !email} style={{ color: "black", fontSize: "larger" }} className="btn btn-outline-primary w-100">
+                    {loading ? <LoadingOutlined spin /> : "Submit"}
+
+                </button> :
                 <button disabled={page !== "login" ? !name || !email || !password || !secret : !email || !password} style={{ color: "black", fontSize: "larger" }} className="btn btn-outline-primary w-100">
                     {loading ? <LoadingOutlined spin /> : (page !== "login" ? "Register" : "Login")}
 
-                </button>
+                </button>}
 
             </div>
         </form>

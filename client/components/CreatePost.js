@@ -44,7 +44,7 @@ function CreatePost({
                         <Avatar size={40} src={imageDetails.url} className='d-flex justify-content-center position-absolute end-0 mb-5' />
                     }
                   </label>
-                  <button disabled={!content.length} type="submit" className="btn btn-primary align-self-end">
+                  <button disabled={content !== null} type="submit" className="btn btn-primary align-self-end">
                     Post
                   </button>
                 </form>

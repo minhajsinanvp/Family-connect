@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { expressjwt } = require("express-jwt");
 const cloudinary = require('cloudinary');
 const { post } = require("../routes/routing");
+const { generateUsername } = require("unique-username-generator");
 
 cloudinary.config({
     cloud_name: process.env.cloudinaryname,
@@ -35,12 +36,13 @@ module.exports.register = async (req, res) => {
         }
 
         const hashedPassword = await passwordHash(password);
-
+        const username = generateUsername("",0,6);
         const newUser = new User({
             name: name,
             email,
             password: hashedPassword,
-            secret
+            secret,
+            userName: username
         })
         await newUser.save();
         return res.json({
@@ -317,5 +319,60 @@ module.exports.deletePost = async(req,res)=>{
         
     } catch (error) {
         console.log(error);
+    }
+}
+
+
+
+
+
+module.exports.profileUpdate = async(req,res)=>{
+    // console.log(req.body);
+   
+    try {
+
+        const data = {}
+
+        if (req.body.username){
+            data.userName = req.body.username
+            
+        }
+
+        if (req.body.name){
+            data.name = req.body.name
+        }
+
+        if (req.body.password){
+            
+            if(req.body.password.length < 6){
+                return res.json({error : "Password length should minimum 6 character"})
+            }
+            else{
+                const password = req.body.password;
+                const hashedPassword = await passwordHash(password)
+                data.passowrd = hashedPassword
+            }
+        }
+
+        if (req.body.secret){
+            data.secret = req.body.secret
+        }
+
+        // console.log(data);
+
+        
+        let user = await User.findByIdAndUpdate(req.auth._id, data, {new: true})
+        console.log(user);
+        user.password = undefined
+        user.secret = undefined
+        return res.json(user)
+
+   
+        
+    } catch (error) {
+        if(error.code == 11000){
+            return res.json({error: "Username is already exists"})
+        }
+        
     }
 }
