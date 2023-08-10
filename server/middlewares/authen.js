@@ -8,7 +8,7 @@ module.exports.checkingToken = () => {
         algorithms: ["HS256"]
     });
 };
-
+ 
 
 module.exports.canEditDeletePost = async(req,res,next) =>{
 

@@ -79,7 +79,7 @@ function PostList({ postList }) {
                 </div>
                 <div className="post-actions">
 
-              {(state.user && state.user._id) === post.userId._id && <>
+              {(state && state.user._id) === post.userId._id && <>
                 <EditOutlined onClick={() => router.push(`/user/${post._id}`)} className="action-icon edit-icon" />
                   <DeleteOutlined onClick={()=>{
                     showModal(post._id)

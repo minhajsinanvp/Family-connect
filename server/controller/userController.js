@@ -288,6 +288,7 @@ module.exports.updatePost = async(req,res)=>{
         const image = req.body.imageDetails
         // const post = await Post.findById(req.params.id)
         // console.log(req.body.userId);
+        
 
         const updatedPost = await Post.findByIdAndUpdate(req.params.id,{content :req.body.content,image: req.body.imageDetails} ,{
             new : true

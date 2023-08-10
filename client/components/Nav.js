@@ -4,19 +4,13 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const Nav = () => {
-
-    const [path, setPath] = useState("")
+    const [path, setPath] = useState("");
     const [state, setState] = useContext(userContext);
     const router = useRouter();
 
-
     useEffect(() => {
-        
         process.browser && setPath(window.location.pathname);
-        
-    },[process.browser && window.location.pathname])
-
-   
+    }, [process.browser && window.location.pathname]);
 
     const logout = () => {
         window.localStorage.removeItem("auth");
@@ -30,17 +24,31 @@ const Nav = () => {
                 <div>
                     <Link href="/" className={`nav-link ${path === '/' ? 'active' : 'text-light'}`}>Connect You</Link>
                 </div>
+
                 <div>
                     {state && (
-                        <>
-                            <Link  href="/user/dashboard" className={`text-decoration-none ${path === '/user/dashboard' ? 'active' : 'text-light'}` }>{state.user.name}</Link>
-                            <a onClick={logout} href="/login" className=' mx-4 text-decoration-none text-light' >Logout</a>
-                        </>
+                        <div className="dropdown">
+                            <button className="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                {state.user && state.user.name}
+                            </button>
+                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <Link href="/user/dashboard" className={`dropdown-item ${path === '/user/dashboard' ? 'active' : 'text-dark'}`}>
+                                        Profile
+                                    </Link>
+                                </li>
+                                <li>
+                                    <a className="dropdown-item text-dark" onClick={logout} href="#">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     )}
                     {!state && (
                         <>
-                            <Link className={`text-decoration-none  ${path === '/login' ? 'active' : 'text-light'}`} href="/login">Login</Link>
-                            <Link href="/register" className={`mx-4 text-decoration-none  ${path === '/register' ? 'active' : 'text-light'} `}>Register</Link>
+                            <Link className={`text-decoration-none ${path === '/login' ? 'active' : 'text-light'}`} href="/login">Login</Link>
+                            <Link href="/register" className={`mx-4 text-decoration-none ${path === '/register' ? 'active' : 'text-light'}`}>Register</Link>
                         </>
                     )}
                 </div>

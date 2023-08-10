@@ -17,7 +17,7 @@ function userRoute({ children }) {
     const[state,setState] = useContext(userContext)
 
     useEffect(() => {
-        if(state.token) getCurrentUser()
+        if(state && state.token) getCurrentUser()
     }, [state && state.token])
 
 
