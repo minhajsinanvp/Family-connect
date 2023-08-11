@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { userContext } from '../context';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Avatar } from 'antd';
+
 
 const Nav = () => {
     const [path, setPath] = useState("");
@@ -27,7 +29,11 @@ const Nav = () => {
 
                 <div>
                     {state && (
-                        <div className="dropdown">
+                        <div className='d-flex mx-2'>
+                        
+                            
+                        
+                        <div className="dropdown mt-2">
                             <button className="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 {state.user && state.user.userName ? state.user.userName : state.user.name}
                             </button>
@@ -48,7 +54,16 @@ const Nav = () => {
                                     </a>
                                 </li>
                             </ul>
+
+                            
                         </div>
+                        <Avatar size={60} src={state.user.image} className="d-flex justify-content-center mx-3"/>
+                        </div>
+
+              
+
+                       
+                        
                     )}
                     {!state && (
                         <>

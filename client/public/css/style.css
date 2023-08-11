@@ -33,7 +33,14 @@ body{
 
 
 
-
+.anticon{
+  vertical-align: 0 !important;
+ /* padding-bottom: 10px !important; */
+  margin-left: 10px !important;
+  justify-content: center !important;
+  align-items: center !important ;
+  /* display: flex; */
+}
 
 
 /* PostList.css */

@@ -229,7 +229,7 @@ module.exports.imageUpload = async (req, res) => {
     // console.log(req.files);
     try {
         const result = await cloudinary.uploader.upload(req.files.image.path)
-        // console.log("Upload url image: ", result);
+        console.log("Upload url image: ", result);
 
         res.json({
 
@@ -326,12 +326,12 @@ module.exports.deletePost = async(req,res)=>{
 
 
 
-module.exports.profileUpdate = async(req,res)=>{
+module.exports.profileUpdate = async(req,res)=>{ 
     // console.log(req.body);
    
     try {
 
-        const data = {}
+        const data = {} 
 
         if (req.body.username){
             data.userName = req.body.username
@@ -357,6 +357,10 @@ module.exports.profileUpdate = async(req,res)=>{
         if (req.body.secret){
             data.secret = req.body.secret
         }
+        
+        if (req.body.image){
+            data.image = req.body.image.url
+        }  
 
         // console.log(data);
 
@@ -376,3 +380,7 @@ module.exports.profileUpdate = async(req,res)=>{
         
     }
 }
+
+
+
+
