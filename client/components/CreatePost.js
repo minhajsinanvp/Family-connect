@@ -15,11 +15,11 @@ function CreatePost({
   imageUploading,
 }) {
   return (
-    <div className="d-flex justify-content-center align-items-center mt-5">
+    <div className="d-flex justify-content-center align-items-center ">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-12 col-lg-12">
-            <div className="card mt-5 shadow">
+            <div className="card  shadow">
               <div className="card-body" style={{ padding: 10 }}>
                 <h1 className="card-title">Create a Post</h1>
                 <form onSubmit={handlePostSubmit} className="d-flex flex-column">
@@ -44,7 +44,7 @@ function CreatePost({
                         <Avatar size={40} src={imageDetails.url} className='d-flex justify-content-center position-absolute end-0 mb-5' />
                     }
                   </label>
-                  <button disabled={content !== null} type="submit" className="btn btn-primary align-self-end">
+                  <button  type="submit" className="btn btn-primary align-self-end">
                     Post
                   </button>
                 </form>

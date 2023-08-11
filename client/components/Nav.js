@@ -21,11 +21,15 @@ const Nav = () => {
     }
 
     return (
-        <nav className="w-100 h-100 bg-black navbar navbar-expand-md nav d-flex justify-content-between">
+        <div className='d-flex bg-black'>
+                    <Link href="/" className={`nav-link ${path === '/' ? 'active' : 'text-light'}`}><Avatar shape='square' size={100} src={"/images/logo.png"}  className="d-flex justify-content-center " /></Link>
+        
+        <nav className="w-100   navbar navbar-expand-md nav d-flex justify-content-between navbarclass">
+        
             <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
-                <div>
-                    <Link href="/" className={`nav-link ${path === '/' ? 'active' : 'text-light'}`}>Connect You</Link>
-                </div>
+                <span>
+        
+                </span>
 
                 <div>
                     {state && (
@@ -74,6 +78,7 @@ const Nav = () => {
                 </div>
             </div>
         </nav>
+        </div>
     )
 }
 

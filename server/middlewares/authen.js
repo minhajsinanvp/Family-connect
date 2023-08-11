@@ -1,5 +1,6 @@
 const {expressjwt}= require("express-jwt");
 const Post = require("../models/postSchema");
+const User = require("../models/userSchema");
 
 module.exports.checkingToken = () => {
     // console.log("checking token is called");
@@ -29,4 +30,34 @@ module.exports.canEditDeletePost = async(req,res,next) =>{
         console.log(error);
     }
 
+}
+
+
+
+module.exports.addingFollower = async(req,res,next) =>{
+
+    try {
+
+        const addingFollowerUser = await User.findByIdAndUpdate(req.body._id,{$addToSet:{followers:req.auth_id }}, {new: true})
+
+
+        next()
+        // console.log(req.auth._id);
+        
+    } catch (error) {
+        console.log(error);
+    }
+
+} 
+
+
+
+module.exports.removeFollower = async(req,res,next)=>{
+    try{
+            const removeFollowerUser = await User.findByIdAndUpdate(req.body._id,{$pull : {followers : req.auth._id}},{new: true})
+            next()
+    }
+    catch(error){
+        console.log(error);
+    }
 }

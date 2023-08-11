@@ -251,10 +251,17 @@ module.exports.userPosts = async (req, res) => {
 
     try {
         // const posts = await Post.find({ userId: req.auth._id })
-        const posts = await Post.find({})
-            .populate("userId", "_id name image")
-            .sort({ createdAt: -1 })
-            .limit(10);
+        const user = await User.findById(req.auth._id)
+        const following = user.following
+        following.push(user._id)
+
+
+        const posts = await Post.find({userId : {$in : following}})
+        .populate("userId", "_id name image")
+        .sort({createdAt : -1}).limit(10)
+
+
+            
 
         // console.log(posts);
 
@@ -366,7 +373,7 @@ module.exports.profileUpdate = async(req,res)=>{
 
         
         let user = await User.findByIdAndUpdate(req.auth._id, data, {new: true})
-        console.log(user);
+        // console.log(user);
         user.password = undefined
         user.secret = undefined
         return res.json(user)
@@ -383,4 +390,70 @@ module.exports.profileUpdate = async(req,res)=>{
 
 
 
+module.exports.findPeople= async(req,res)=>{
+   try {
+    const user = await User.findById(req.auth._id)
 
+    let following = user.following;
+
+    following.push(user._id)
+
+    const allPeople = await User.find({_id: {$nin: following}}).select('-password -secret').limit(10)
+
+     
+
+    console.log(allPeople);
+    res.json(allPeople)
+    
+   } catch (error) {
+    console.log(error);
+   }
+}
+
+
+module.exports.followRequest = async(req,res)=>{
+    try {
+
+        const user  =  await User.findByIdAndUpdate(req.auth._id,{$addToSet:{following: req.body._id}}, {new: true}).select("-password -secret")
+        res.json(user)
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+module.exports.followingList = async(req,res)=>{
+    try {
+        // console.log(req.body);
+
+        const user = await User.findById(req.auth._id)
+        const following = await User.find({_id: user.following}).limit(100)
+
+        // console.log(following);
+        res.json(following)
+
+
+
+    } catch (error) {
+
+        console.log(error);
+        
+    }
+}
+
+
+
+
+module.exports.unfollowRequest = async(req,res)=>{
+
+    try {
+        // console.log(req.body._id);
+        const user = await User.findByIdAndUpdate(req.auth._id, {$pull: {following: req.body._id}},{new: true}).select("-password -secret")
+        res.json(user)
+        
+    } catch (error) {
+        console.log(error);
+    }
+}

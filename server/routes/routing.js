@@ -1,8 +1,8 @@
 const express = require('express');
 const formidable = require("express-formidable");
 
-const { register, login, loggedUser, passwordRecovery, creatPost, imageUpload, userPosts, editPost, updatePost, deletePost, profileUpdate, profileImage } = require('../controller/userController');
-const { checkingToken, canEditDeletePost } = require('../middlewares/authen');
+const { register, login, loggedUser, passwordRecovery, creatPost, imageUpload, userPosts, editPost, updatePost, deletePost, profileUpdate, profileImage, findPeople, followRequest, followingList, unfollowRequest } = require('../controller/userController');
+const { checkingToken, canEditDeletePost, addingFollower, removeFollower } = require('../middlewares/authen');
 
 const router = express.Router();
 
@@ -22,6 +22,11 @@ router.delete("/delete-post/:id", checkingToken(), canEditDeletePost, deletePost
 
 router.post("/profile-update", checkingToken(), profileUpdate)
 // router.post("/profile-upload",checkingToken(),profileImage)
+
+router.get("/find-people", checkingToken(), findPeople)
+router.put('/follow-request', checkingToken(), addingFollower, followRequest)
+router.get("/following-list", checkingToken(), followingList)
+router.put("/user-unfollow",checkingToken(),removeFollower,unfollowRequest)
 
 
 module.exports = router;

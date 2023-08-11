@@ -70,7 +70,7 @@ function PostList({ postList }) {
           postList.map((post, index) => (
             <div key={post._id} className="post-card">
               <div className="post-header">
-                <Avatar size={40}>{post.userId.name[0]}</Avatar>
+                <Avatar  className="d-flex justify-content-center" size={40}>{post.userId.name[0]}</Avatar>
                 <div className="post-header-info">
                   <span className="post-user-name">{post.userId.name}</span>
                   <span className="post-created-at mx-2">
@@ -91,8 +91,8 @@ function PostList({ postList }) {
               <div className="post-content">{renderHTML(post.content)}</div>
               {post.image && (
                 <div
-                  className="post-image"
-                  style={{ backgroundImage: `url(${post.image.url})` }}
+                  className="post-image d-flex justify-content-center"
+                  style={{ backgroundImage: `url(${post.image.url})`, display:"flex", justifyContent: "center"  }}
                 />
               )}
               <div className="post-footer">

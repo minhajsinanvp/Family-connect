@@ -7,6 +7,8 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import { Form } from "antd";
 import PostList from "../../components/PostList";
+import SideBar from "../../components/SideBar";
+import Link from "next/link";
 
 
 
@@ -23,10 +25,16 @@ function dashboard() {
 
   const [post, setPost] = useState([])
 
+  const [people, setPeople] = useState([])
+
   useEffect(() => {
 
     if(state && state.token)
-    { getPost()}
+    { 
+      getPost()
+      getPeople()
+    
+    }
 
   }, [state && state.token])
 
@@ -112,7 +120,42 @@ function dashboard() {
 
   }
 
+  const getPeople = async() =>{
+    try {
+      const {data} = await axios.get("/find-people")
+      console.log(data);
+      setPeople(data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+
+  const handleFollow = async(user)=>{
+    try {
+      
+
+      const {data} = await axios.put("/follow-request", {_id : user._id})
+
+      let auth = JSON.parse(localStorage.getItem('auth'));
+
+      auth.user = data;
+
+      localStorage.setItem('auth', JSON.stringify(auth))
+
+      setState({...state, user:data})
+      toast.success(`Unfollowing ${user.name}`)
+
+      let filtered = people.filter((person) => (person._id !== user._id))
+      console.log(filtered);
+      setPeople(filtered)
+     
+      getPost()
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
   return (
 
     <UserRoute>
@@ -139,7 +182,10 @@ function dashboard() {
            />
           </div>
           {/* <pre>{JSON.stringify(post, null, 4)}</pre> */}
-          <div className="col-md-4">sidebar</div>
+          <div className="col-md-4 sidebar ">
+          {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" mt-2 btn btn-info d-flex justify-content-center h6 text-decoration-none">Following : {state.user.following.length} persons</a></Link>}
+            <SideBar peopleData={people} handleFollow={handleFollow} />
+          </div>
         </div>
       </div>
     </UserRoute>

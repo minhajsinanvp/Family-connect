@@ -3,6 +3,19 @@ img{
 
 }
 
+.sidebar{
+  border-radius: 10px;
+  background-color: rgb(226, 214, 203);
+  height: fit-content !important;
+
+}
+
+.sidebarcontent{
+
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 
 body{
     background-color: rgb(173, 230, 195) !important;
