@@ -8,23 +8,19 @@ const postSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User" // Refers to the "User" model
+
     },
     image: {
         url: String,
         public_id: String
     },
-    likes: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User' // Refers to the "User" model, used for likes
-    },
-    comments: {
+    likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+    comments: [{
         text: String,
         created: { type: Date, default: Date.now },
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User' // Refers to the "User" model, used for comments
-        }
-    }
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+    }] 
+
 }, {
     timestamps: true // Adds createdAt and updatedAt fields
 });

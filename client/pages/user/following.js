@@ -63,7 +63,7 @@ function following() {
             localStorage.setItem('auth', JSON.stringify(auth))
       
             setState({...state, user:data})
-            toast.success(`Following ${user.name}`)
+            toast.success(`Unfollowing ${user.name}`)
       
             let filtered = people.filter((person) => (person._id !== user._id))
             console.log(filtered);

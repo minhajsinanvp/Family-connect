@@ -5,10 +5,11 @@ import CreatePost from "../../components/CreatePost";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { Form } from "antd";
+import { Form, Modal } from "antd";
 import PostList from "../../components/PostList";
 import SideBar from "../../components/SideBar";
 import Link from "next/link";
+import CommentForm from "../../components/CommentForm";
 
 
 
@@ -26,6 +27,11 @@ function dashboard() {
   const [post, setPost] = useState([])
 
   const [people, setPeople] = useState([])
+
+  const [comment,setComment]= useState('')
+  const [visible,setVisible] = useState(false)
+  const [currentPost, setCurrentPost] = useState({})
+
 
   useEffect(() => {
 
@@ -47,6 +53,7 @@ function dashboard() {
       const response = await axios.get("/get-post");
       // console.log(response.data);
       setPost(response.data)
+
     } catch (error) {
       console.log(error);
     }
@@ -123,7 +130,7 @@ function dashboard() {
   const getPeople = async() =>{
     try {
       const {data} = await axios.get("/find-people")
-      console.log(data);
+      // console.log(data);
       setPeople(data)
     } catch (error) {
       console.log(error);
@@ -144,7 +151,7 @@ function dashboard() {
       localStorage.setItem('auth', JSON.stringify(auth))
 
       setState({...state, user:data})
-      toast.success(`Unfollowing ${user.name}`)
+      toast.success(`Following ${user.name}`)
 
       let filtered = people.filter((person) => (person._id !== user._id))
       console.log(filtered);
@@ -156,6 +163,63 @@ function dashboard() {
       
     }
   }
+
+  const handleLike = async(id)=> {
+    try {
+      // console.log("Post id ==>", _id);
+      const {data} = await axios.put("/like-post", {_id: id})
+      console.log(data);
+      
+      getPost()
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+    const handleUnLike = async(id)=> {
+    try {
+      // console.log("Post id ==>", _id);
+      const {data} = await axios.put("/unlike-post", {_id: id})
+      console.log("User unliked the post");
+      
+      getPost()
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleComment = async(post) =>{
+    setCurrentPost(post)
+    setVisible(true)
+  }
+  
+  const addComment = async(e)=>{
+
+    e.preventDefault()
+    // console.log(comment);
+    // console.log(currentPost._id);
+
+    try {
+      const {data} = await axios.put("/add-comment",{postId : currentPost._id, comment})
+      console.log(data);
+      toast.success("Comment is posted")
+      setComment("")
+      setVisible(false)
+      getPost()
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  const removeComment = async()=>{
+
+  }
+
+
+
   return (
 
     <UserRoute>
@@ -175,18 +239,36 @@ function dashboard() {
               handleImage={handleImage}
               imageUploading={imageUploading}
               imageDetails={imageDetails}
+            
 
             />
           <PostList
           postList = {post}
+          handleLike = {handleLike}
+          handleUnLike = {handleUnLike}
+          peopleData={people}
+          visibile = {visible}
+          handleComment = {handleComment}
+ 
            />
           </div>
           {/* <pre>{JSON.stringify(post, null, 4)}</pre> */}
           <div className="col-md-4 sidebar ">
-          {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" mt-2 btn btn-info d-flex justify-content-center h6 text-decoration-none">Following : {state.user.following.length} persons</a></Link>}
+          {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" mt-2 btn btn-info d-flex justify-content-center h6 text-decoration-none">Following : {state.user.following.length}</a></Link>}
             <SideBar peopleData={people} handleFollow={handleFollow} />
           </div>
         </div>
+        <Modal 
+
+          open={visible}
+          onCancel={()=> setVisible(false)}
+          title = "comment"
+          footer= {null}
+        >
+         <CommentForm addComment={addComment} removeComment={removeComment} comment={comment} setComment={setComment} />
+        </Modal>
+
+       
       </div>
     </UserRoute>
 

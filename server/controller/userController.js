@@ -6,6 +6,7 @@ const { expressjwt } = require("express-jwt");
 const cloudinary = require('cloudinary');
 const { post } = require("../routes/routing");
 const { generateUsername } = require("unique-username-generator");
+const { json } = require("express");
 
 cloudinary.config({
     cloud_name: process.env.cloudinaryname,
@@ -247,7 +248,7 @@ module.exports.imageUpload = async (req, res) => {
 
 
 module.exports.userPosts = async (req, res) => {
-    console.log(req.auth._id);
+    // console.log(req.auth._id);
 
     try {
         // const posts = await Post.find({ userId: req.auth._id })
@@ -258,6 +259,7 @@ module.exports.userPosts = async (req, res) => {
 
         const posts = await Post.find({userId : {$in : following}})
         .populate("userId", "_id name image")
+        .populate("comments.userId", "_id name image")
         .sort({createdAt : -1}).limit(10)
 
 
@@ -457,3 +459,100 @@ module.exports.unfollowRequest = async(req,res)=>{
         console.log(error);
     }
 }
+
+
+
+
+module.exports.likePost = async(req,res)=>{
+    try {
+
+        const post = await Post.findByIdAndUpdate(req.body._id, {$addToSet : {likes: req.auth._id}},{new:true})
+        // console.log(post);
+        // const like = post.likes;
+
+        res.json(post)
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+module.exports.unLikePost = async(req,res)=>{
+    try {
+
+        const user  =  await Post.findByIdAndUpdate(req.body._id,{$pull:{likes: req.auth._id}}, {new: true})
+
+        // console.log(post);
+        
+        res.json(post)
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+module.exports.addComment = async (req, res) => {
+    try {
+        const { postId, comment } = req.body;
+
+        const result = await Post.findByIdAndUpdate(
+            postId,
+            {
+                $push: {
+                    comments: {
+                        text: comment,
+                        userId: req.auth._id  // Make sure to use lowercase "userId"
+                    }
+                }
+            },
+            { new: true }
+        )
+        .populate("userId", "_id name image")
+        .populate("comments.userId", "_id name image");
+
+        res.json(result);  // Use 'result' instead of 'post'
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "An error occurred while adding the comment." });
+    }
+};
+
+
+
+module.exports.removeComment = async(req,res)=>{
+
+    try {
+        // console.log(req.body.comment);
+
+        const {postId, comment} = req.body
+
+        const result = await Post.findByIdAndUpdate(postId, {$pull: {comments: {_id: comment._id}}},{new: true})
+
+        
+
+        res.json(result)
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
+
+module.exports.getPostById = async (req, res) => {
+    const id = req.params._id; // Use the correct parameter name
+    console.log("ID received:", id); // Log the received ID
+    try {
+        const post = await Post.findById(id); // Use the correct id variable
+        console.log("Post retrieved:", post); // Log the retrieved post
+        res.json(post);
+    } catch (error) {
+        console.log("Error:", error); // Log the error
+        res.status(500).json({ error: "An error occurred while fetching the post." });
+    }
+};

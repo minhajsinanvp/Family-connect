@@ -13,6 +13,7 @@ function CreatePost({
   handleImage,
   imageDetails,
   imageUploading,
+ 
 }) {
   return (
     <div className="d-flex justify-content-center align-items-center ">
