@@ -25,6 +25,7 @@ function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentD
   const [state, setState] = useContext(userContext)
 
 
+
   // console.log(postList[0]);
   // console.log(state);
 
@@ -107,16 +108,16 @@ function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentD
         <CommentOutlined style={{ fontSize: '30px'}} onClick={()=> handleComment(post)} className="interaction-icon comment-icon" />
         <Link  href={`/user/post/${post._id}`} legacyBehavior >
           <a className='text-decoration-none'>
-          <span className="interaction-count">  {post.comments&& post.comments.length>0 &&( "  " + post.comments.length)} Comments</span>
+          <span className="interaction-count"> View{post.comments&& post.comments.length>0 &&( "  " + post.comments.length)} Comments</span>
           </a>
         </Link>
       </div>
     </div>
 
     {post.comments && post.comments.length>0 &&  (
-      <ol className='list-group mt-1 my-custom-scrollbar my-custom-scrollbar-primary '>
+      <ol className='list-group mt-1 '>
        { post.comments.slice(0,count).map(comment =>(
-        <li className='list-group-item d-flex justify-content-between align-item-start'>
+        <li key={comment._id} className='list-group-item d-flex justify-content-between align-item-start'>
         <div className='ms-2 me-auto'>
           <div className='d-flex'>
       <Avatar className="d-flex justify-content-center text-muted" size={40} src= {sourceFunc(comment.userId)}> </Avatar>
@@ -130,7 +131,7 @@ function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentD
         <span className='d-flex badge rounded-pill text-muted'>
         {moment(comment.created).fromNow()} {state && state.user._id == comment.userId._id && (
           <div className='d-flex ml-auto mx-2 '>
-            <DeleteOutlined onClick={()=>{handleCommentDelete(post._id, comment)}} style={{ fontSize: '20px'}}  className=' text-danger' />
+            {handleCommentDelete && <DeleteOutlined onClick={()=>{handleCommentDelete(post._id, comment)}} style={{ fontSize: '20px'}}  className=' text-danger' />}
           </div>
         )}
         </span>

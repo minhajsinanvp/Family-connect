@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 
 import Link from 'next/link';
 import Post from './Post';
+import { diffIndexes } from '../../server/models/userSchema';
 
 
 
@@ -77,7 +78,7 @@ function PostList({ postList, handleLike, handleUnLike, handleComment, setPost})
       <div className="container">
         {postList &&
           postList.map((post, index) => (
-           <Post count={5} setPost={setPost} post ={post} handleLike={handleLike} handleUnLike={handleUnLike} handleComment={handleComment} showModal={showModal} deletPostHandler={deletPostHandler}  />
+           <Post key={post._id} count={2} setPost={setPost} post ={post} handleLike={handleLike} handleUnLike={handleUnLike} handleComment={handleComment} showModal={showModal} deletPostHandler={deletPostHandler}  />
           ))}
 
        
