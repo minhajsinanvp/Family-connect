@@ -176,6 +176,29 @@ function dashboard() {
     }
   }
 
+  const handleUnFollow = async(user) =>{
+
+    try {
+        const {data} = await axios.put("/user-unfollow", {_id: user._id})
+
+        let auth = JSON.parse(localStorage.getItem('auth'));
+
+        auth.user = data;
+  
+        localStorage.setItem('auth', JSON.stringify(auth))
+  
+        setState({...state, user:data})
+        toast.success(`Unfollowing ${user.name}`)
+  
+        let filtered = people.filter((person) => (person._id !== user._id))
+        console.log(filtered);
+        setPeople(filtered)
+       
+        getPost()
+    } catch (error) {
+        console.log(error);
+    }
+}
   const handleLike = async(id)=> {
     try {
       // console.log("Post id ==>", _id);
@@ -300,7 +323,7 @@ function dashboard() {
           <div className="col-md-4 sidebar ">
           <Search />
           {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" text-info mt-2  h6 text-decoration-none">{state.user.following.length} Following</a></Link>}
-            <SideBar peopleData={people} handleFollow={handleFollow} />
+            <SideBar peopleData={people} handleUnFollow={handleUnFollow} handleFollow={handleFollow} />
           </div>
         </div>
         <Modal 

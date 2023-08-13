@@ -620,3 +620,15 @@ module.exports.findUser = async(req,res)=>{
         
     }
 }
+
+
+module.exports.userProfile = async(req,res)=>{
+    try {
+
+        const user = await User.findOne({name: req.params.name}).select("-password -secret")
+        res.json(user)
+        
+    } catch (error) {
+        
+    }
+}

@@ -5,6 +5,7 @@ import { useRouter } from "next/router"
 import { userContext } from "../context"
 import { useContext } from "react"
 import { sourceFunc } from "../functions/reuseFun"
+import Link from "next/link"
 
 
 
@@ -26,7 +27,8 @@ function SideBar({ peopleData, handleFollow, handleUnFollow }) {
 
             avatar={<Avatar size={40} src={sourceFunc(user)} className="d-flex justify-content-center " />}
 
-            title={<div className="d-flex justify-content-between align-item sidebarcontent">{user.name}
+            title={<div className="d-flex justify-content-between align-item sidebarcontent">
+            <Link href={`/user/profile/${user.name}`}>{user.name}</Link>
 
               {state && state.user && state.user.following
                 .includes(user._id) ?
