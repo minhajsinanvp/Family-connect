@@ -37,7 +37,7 @@ module.exports.register = async (req, res) => {
         }
 
         const hashedPassword = await passwordHash(password);
-        const username = generateUsername("",0,6);
+        const username = generateUsername("", 0, 6);
         const newUser = new User({
             name: name,
             email,
@@ -257,13 +257,13 @@ module.exports.userPosts = async (req, res) => {
         following.push(user._id)
 
 
-        const posts = await Post.find({userId : {$in : following}})
-        .populate("userId", "_id name image")
-        .populate("comments.userId", "_id name image")
-        .sort({createdAt : -1}).limit(10)
+        const posts = await Post.find({ userId: { $in: following } })
+            .populate("userId", "_id name image")
+            .populate("comments.userId", "_id name image")
+            .sort({ createdAt: -1 }).limit(10)
 
 
-            
+
 
         // console.log(posts);
 
@@ -292,22 +292,22 @@ module.exports.editPost = async (req, res) => {
 
 
 
-module.exports.updatePost = async(req,res)=>{
+module.exports.updatePost = async (req, res) => {
 
     try {
         console.log(req.body);
         const image = req.body.imageDetails
         // const post = await Post.findById(req.params.id)
         // console.log(req.body.userId);
-        
 
-        const updatedPost = await Post.findByIdAndUpdate(req.params.id,{content :req.body.content,image: req.body.imageDetails} ,{
-            new : true
+
+        const updatedPost = await Post.findByIdAndUpdate(req.params.id, { content: req.body.content, image: req.body.imageDetails }, {
+            new: true
         })
 
-        return res.status(201).send({success : "Post updated"})
-        
-        
+        return res.status(201).send({ success: "Post updated" })
+
+
     } catch (error) {
         console.log(error);
     }
@@ -316,16 +316,16 @@ module.exports.updatePost = async(req,res)=>{
 
 
 
-module.exports.deletePost = async(req,res)=>{
+module.exports.deletePost = async (req, res) => {
     try {
         const response = await Post.findByIdAndDelete(req.params.id)
 
-        if(response.image && response.image.public_id){
+        if (response.image && response.image.public_id) {
             const img = await cloudinary.uploader.destroy(response.image.public_id)
         }
 
-        return res.json({ok: true})
-        
+        return res.json({ ok: true })
+
     } catch (error) {
         console.log(error);
     }
@@ -335,90 +335,90 @@ module.exports.deletePost = async(req,res)=>{
 
 
 
-module.exports.profileUpdate = async(req,res)=>{ 
+module.exports.profileUpdate = async (req, res) => {
     // console.log(req.body);
-   
+
     try {
 
-        const data = {} 
+        const data = {}
 
-        if (req.body.username){
+        if (req.body.username) {
             data.userName = req.body.username
-            
+
         }
 
-        if (req.body.name){
+        if (req.body.name) {
             data.name = req.body.name
         }
 
-        if (req.body.password){
-            
-            if(req.body.password.length < 6){
-                return res.json({error : "Password length should minimum 6 character"})
+        if (req.body.password) {
+
+            if (req.body.password.length < 6) {
+                return res.json({ error: "Password length should minimum 6 character" })
             }
-            else{
+            else {
                 const password = req.body.password;
                 const hashedPassword = await passwordHash(password)
                 data.passowrd = hashedPassword
             }
         }
 
-        if (req.body.secret){
+        if (req.body.secret) {
             data.secret = req.body.secret
         }
-        
-        if (req.body.image){
+
+        if (req.body.image) {
             data.image = req.body.image.url
-        }  
+        }
 
         // console.log(data);
 
-        
-        let user = await User.findByIdAndUpdate(req.auth._id, data, {new: true})
+
+        let user = await User.findByIdAndUpdate(req.auth._id, data, { new: true })
         // console.log(user);
         user.password = undefined
         user.secret = undefined
         return res.json(user)
 
-   
-        
+
+
     } catch (error) {
-        if(error.code == 11000){
-            return res.json({error: "Username is already exists"})
+        if (error.code == 11000) {
+            return res.json({ error: "Username is already exists" })
         }
-        
+
     }
 }
 
 
 
-module.exports.findPeople= async(req,res)=>{
-   try {
-    const user = await User.findById(req.auth._id)
+module.exports.findPeople = async (req, res) => {
+    try {
+        const user = await User.findById(req.auth._id)
 
-    let following = user.following;
+        let following = user.following;
 
-    following.push(user._id)
+        following.push(user._id)
 
-    const allPeople = await User.find({_id: {$nin: following}}).select('-password -secret').limit(10)
+        const allPeople = await User.find({ _id: { $nin: following } }).select('-password -secret').limit(10)
 
-     
 
-    console.log(allPeople);
-    res.json(allPeople)
-    
-   } catch (error) {
-    console.log(error);
-   }
+
+        // console.log(allPeople);
+        res.json(allPeople)
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
-module.exports.followRequest = async(req,res)=>{
+module.exports.followRequest = async (req, res) => {
     try {
 
-        const user  =  await User.findByIdAndUpdate(req.auth._id,{$addToSet:{following: req.body._id}}, {new: true}).select("-password -secret")
+        const user = await User.findByIdAndUpdate(req.auth._id, { $addToSet: { following: req.body._id } }, { new: true }).select("-password -secret")
         res.json(user)
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -426,12 +426,12 @@ module.exports.followRequest = async(req,res)=>{
 
 
 
-module.exports.followingList = async(req,res)=>{
+module.exports.followingList = async (req, res) => {
     try {
         // console.log(req.body);
 
         const user = await User.findById(req.auth._id)
-        const following = await User.find({_id: user.following}).limit(100)
+        const following = await User.find({ _id: user.following }).limit(100)
 
         // console.log(following);
         res.json(following)
@@ -441,20 +441,20 @@ module.exports.followingList = async(req,res)=>{
     } catch (error) {
 
         console.log(error);
-        
+
     }
 }
 
 
 
 
-module.exports.unfollowRequest = async(req,res)=>{
+module.exports.unfollowRequest = async (req, res) => {
 
     try {
         // console.log(req.body._id);
-        const user = await User.findByIdAndUpdate(req.auth._id, {$pull: {following: req.body._id}},{new: true}).select("-password -secret")
+        const user = await User.findByIdAndUpdate(req.auth._id, { $pull: { following: req.body._id } }, { new: true }).select("-password -secret")
         res.json(user)
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -463,31 +463,31 @@ module.exports.unfollowRequest = async(req,res)=>{
 
 
 
-module.exports.likePost = async(req,res)=>{
+module.exports.likePost = async (req, res) => {
     try {
 
-        const post = await Post.findByIdAndUpdate(req.body._id, {$addToSet : {likes: req.auth._id}},{new:true})
+        const post = await Post.findByIdAndUpdate(req.body._id, { $addToSet: { likes: req.auth._id } }, { new: true })
         // console.log(post);
         // const like = post.likes;
 
         res.json(post)
-        
+
     } catch (error) {
         console.log(error);
     }
 }
 
 
-module.exports.unLikePost = async(req,res)=>{
+module.exports.unLikePost = async (req, res) => {
     try {
 
-        const user  =  await Post.findByIdAndUpdate(req.body._id,{$pull:{likes: req.auth._id}}, {new: true})
+        const user = await Post.findByIdAndUpdate(req.body._id, { $pull: { likes: req.auth._id } }, { new: true })
 
         // console.log(post);
-        
+
         res.json(post)
-        
-        
+
+
     } catch (error) {
         console.log(error);
     }
@@ -512,8 +512,8 @@ module.exports.addComment = async (req, res) => {
             },
             { new: true }
         )
-        .populate("userId", "_id name image")
-        .populate("comments.userId", "_id name image");
+            .populate("userId", "_id name image")
+            .populate("comments.userId", "_id name image");
 
         res.json(result);  // Use 'result' instead of 'post'
     } catch (error) {
@@ -524,21 +524,21 @@ module.exports.addComment = async (req, res) => {
 
 
 
-module.exports.removeComment = async(req,res)=>{
+module.exports.removeComment = async (req, res) => {
 
     try {
         // console.log(req.body.comment);
 
-        const {postId, comment} = req.body
+        const { postId, comment } = req.body
 
-        const result = await Post.findByIdAndUpdate(postId, {$pull: {comments: {_id: comment._id}}},{new: true})
+        const result = await Post.findByIdAndUpdate(postId, { $pull: { comments: { _id: comment._id } } }, { new: true })
 
-        
+
 
         res.json(result)
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
@@ -546,13 +546,33 @@ module.exports.removeComment = async(req,res)=>{
 
 module.exports.getPostById = async (req, res) => {
     const id = req.params._id; // Use the correct parameter name
-    console.log("ID received:", id); // Log the received ID
+    // console.log("ID received:", id); // Log the received ID
     try {
-        const post = await Post.findById(id); // Use the correct id variable
-        console.log("Post retrieved:", post); // Log the retrieved post
+        const post = await Post.findById(id)
+            .populate("userId", "_id name image")
+            .populate("comments.userId", "_id name image"); // Use the correct id variable
+        // console.log("Post retrieved:", post); // Log the retrieved post
         res.json(post);
     } catch (error) {
         console.log("Error:", error); // Log the error
         res.status(500).json({ error: "An error occurred while fetching the post." });
     }
 };
+
+
+
+module.exports.deleteComment = async(req,res) =>{
+
+    try {
+
+        const {postId,comment} = req.body
+        
+ 
+        const post = await Post.findByIdAndUpdate(postId, {$pull : {comments: {_id: comment._id}}}, {new: true})
+
+        res.json(post)
+        
+    } catch (error) {
+        
+    }
+} 

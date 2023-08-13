@@ -249,6 +249,7 @@ function dashboard() {
           peopleData={people}
           visibile = {visible}
           handleComment = {handleComment}
+          setPost = {setPost}
  
            />
           </div>
@@ -274,7 +275,7 @@ function dashboard() {
 
 
 
-  )
+  ) 
 }
 
 export default dashboard

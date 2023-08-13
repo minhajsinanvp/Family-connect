@@ -19,7 +19,7 @@ import Link from 'next/link';
 
 
 
-function Post() {
+function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentDelete}) {
     const [modalVisible, setModalVisible] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState(null);
   const [state, setState] = useContext(userContext)
@@ -30,7 +30,7 @@ function Post() {
 
   const router = useRouter()
 
-
+ 
   const deletPostHandler = async (id) => {
 
     try {
@@ -65,9 +65,12 @@ function Post() {
       closeModal();
     }
   };
+
+
   
   return (
-    <div key={post._id} className="post-card">
+    <>
+    {post && post.userId &&  <div key={post._id} className="post-card">
     <div className="post-header">
       <Avatar className="d-flex justify-content-center" size={40} src= {sourceFunc(post.userId)}></Avatar>
       <div className="post-header-info">
@@ -97,22 +100,22 @@ function Post() {
     <div className="post-footer">
       <div className="post-interactions">
         {post.likes.includes(state && state.user._id) ?( <>
-          <HeartFilled onClick={() => handleUnLike(post._id)} className="interaction-icon heart-icon" />
+          <HeartFilled style={{ fontSize: '30px'}} onClick={() => handleUnLike(post._id)} className="interaction-icon heart-icon" />
           <span className="interaction-count" >{post.likes.length} Likes</span>
-        </>) : (<> <HeartOutlined onClick={() => handleLike(post._id)} className="interaction-icon heart-icon" />
+        </>) : (<> <HeartOutlined style={{ fontSize: '30px'}} onClick={() => handleLike(post._id)} className="interaction-icon heart-icon" />
           <span className="interaction-count" >{post.likes.length>0 && post.likes.length} Likes</span></>)}
-        <CommentOutlined onClick={()=> handleComment(post)} className="interaction-icon comment-icon" />
+        <CommentOutlined style={{ fontSize: '30px'}} onClick={()=> handleComment(post)} className="interaction-icon comment-icon" />
         <Link  href={`/user/post/${post._id}`} legacyBehavior >
           <a className='text-decoration-none'>
-          <span className="interaction-count">{post.comments&& post.comments.length>0 && post.comments.length} Comments</span>
+          <span className="interaction-count">  {post.comments&& post.comments.length>0 &&( "  " + post.comments.length)} Comments</span>
           </a>
         </Link>
       </div>
     </div>
 
     {post.comments && post.comments.length>0 &&  (
-      <ol className='list-group mt-1'>
-       { post.comments.slice(0,2).map(comment =>(
+      <ol className='list-group mt-1 my-custom-scrollbar my-custom-scrollbar-primary '>
+       { post.comments.slice(0,count).map(comment =>(
         <li className='list-group-item d-flex justify-content-between align-item-start'>
         <div className='ms-2 me-auto'>
           <div className='d-flex'>
@@ -124,13 +127,36 @@ function Post() {
           <div className='d-flex mt-1 mx-5 justify-content-center'>{comment.text}</div>
 
         </div>
-        <span className='badge rounded-pill text-muted'>{moment(comment.created).fromNow()}</span>
+        <span className='d-flex badge rounded-pill text-muted'>
+        {moment(comment.created).fromNow()} {state && state.user._id == comment.userId._id && (
+          <div className='d-flex ml-auto mx-2 '>
+            <DeleteOutlined onClick={()=>{handleCommentDelete(post._id, comment)}} style={{ fontSize: '20px'}}  className=' text-danger' />
+          </div>
+        )}
+        </span>
         </li>
        ))}
       </ol>
     )}
 
-  </div>
+  </div>}
+
+  <Modal
+          title="Confirm Delete"
+          open={modalVisible}
+          onCancel={closeModal}
+          footer={[
+            <Button key="back" onClick={closeModal}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="danger" onClick={confirmDelete}>
+              Delete
+            </Button>,
+          ]}
+        >
+          <p>Are you sure you want to delete this post?</p>
+        </Modal>
+  </>
   )
 }
 
