@@ -251,16 +251,24 @@ module.exports.userPosts = async (req, res) => {
     // console.log(req.auth._id);
 
     try {
+        console.log(req.params.page);
         // const posts = await Post.find({ userId: req.auth._id })
         const user = await User.findById(req.auth._id)
         const following = user.following
         following.push(user._id)
 
+        const currentPage = req.params.page || 1;
+        const perPage = 5;
+
+
+
+
 
         const posts = await Post.find({ userId: { $in: following } })
+        .skip((currentPage-1) * perPage)
             .populate("userId", "_id name image")
             .populate("comments.userId", "_id name image")
-            .sort({ createdAt: -1 }).limit(10)
+            .sort({ createdAt: -1 }).limit(perPage)
 
 
 
@@ -576,3 +584,17 @@ module.exports.deleteComment = async(req,res) =>{
         
     }
 } 
+
+
+
+module.exports.CountPost= async(req,res)=>{
+    try {
+        
+        const totalPost = await Post.find().estimatedDocumentCount()
+        res.json(totalPost)
+
+
+    } catch (error) {
+        
+    }
+}

@@ -20,7 +20,7 @@ import { diffIndexes } from '../../server/models/userSchema';
 
 
 
-function PostList({ postList, handleLike, handleUnLike, handleComment, setPost}) {
+function PostList({ postList, handleLike, handleUnLike, handleComment, setPost,   handleCommentDelete}) {
   // console.log(postList);
 
 
@@ -45,7 +45,7 @@ function PostList({ postList, handleLike, handleUnLike, handleComment, setPost})
       if (data.ok) {
         toast.success("Post is deleted")
 
-        window.location.reload();
+     
       }
 
     } catch (error) {
@@ -76,9 +76,9 @@ function PostList({ postList, handleLike, handleUnLike, handleComment, setPost})
 
     <div className="post-list-container">
       <div className="container">
-        {postList &&
-          postList.map((post, index) => (
-           <Post key={post._id} count={2} setPost={setPost} post ={post} handleLike={handleLike} handleUnLike={handleUnLike} handleComment={handleComment} showModal={showModal} deletPostHandler={deletPostHandler}  />
+        {postList[0] &&
+          postList.map((post) => (
+           <Post  count={6} handleCommentDelete={handleCommentDelete} key={post._id} count={2} setPost={setPost} post ={post} handleLike={handleLike} handleUnLike={handleUnLike} handleComment={handleComment} showModal={showModal} deletPostHandler={deletPostHandler}  />
           ))}
 
        

@@ -1,7 +1,7 @@
 const express = require('express');
 const formidable = require("express-formidable");
 
-const { register, login, loggedUser, passwordRecovery, creatPost, imageUpload, userPosts, editPost, updatePost, deletePost, profileUpdate, profileImage, findPeople, followRequest, followingList, unfollowRequest, likePost, unLikePost, removeComment, addComment, getPostById, deleteComment } = require('../controller/userController');
+const { register, login, loggedUser, passwordRecovery, creatPost, imageUpload, userPosts, editPost, updatePost, deletePost, profileUpdate, profileImage, findPeople, followRequest, followingList, unfollowRequest, likePost, unLikePost, removeComment, addComment, getPostById, deleteComment, CountPost } = require('../controller/userController');
 const { checkingToken, canEditDeletePost, addingFollower, removeFollower } = require('../middlewares/authen');
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.get("/logged-user", checkingToken(), loggedUser); // Apply checkingToken 
 router.post("/forgotpassword", passwordRecovery);
 router.post("/create-post", checkingToken(), creatPost); // Apply checkingToken middleware here
 router.post("/image-upload", checkingToken(), formidable({ maxFileSize: 5 * 1024 * 1024 }), imageUpload); // Apply checkingToken middleware here
-router.get("/get-post", checkingToken(), userPosts)
+router.get("/get-post/:page", checkingToken(), userPosts)
 
 
 router.get("/edit-post/:id", checkingToken(), editPost)
@@ -37,6 +37,7 @@ router.get("/user-post/:_id", checkingToken(), getPostById);
 
 
 router.put("/delete-comment",checkingToken(),deleteComment)
+router.get("/total-post",checkingToken(), CountPost)
 
 
 module.exports = router;

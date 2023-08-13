@@ -5,11 +5,12 @@ import CreatePost from "../../components/CreatePost";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { Form, Modal } from "antd";
+import { Form, Modal, Pagination } from "antd";
 import PostList from "../../components/PostList";
 import SideBar from "../../components/SideBar";
 import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
+
 
 
 
@@ -31,6 +32,8 @@ function dashboard() {
   const [comment,setComment]= useState('')
   const [visible,setVisible] = useState(false)
   const [currentPost, setCurrentPost] = useState({})
+  const [totalPosts,setTotalPosts] = useState(0)
+  const [page, setPage] = useState(1)
 
 
   useEffect(() => {
@@ -39,10 +42,17 @@ function dashboard() {
     { 
       getPost()
       getPeople()
+      totalPost()
     
     }
 
-  }, [state && state.token])
+    
+    
+
+  }, [state && state.token, page])
+
+
+
 
   const router = useRouter()
 
@@ -50,7 +60,7 @@ function dashboard() {
   const getPost = async () => {
 
     try {
-      const response = await axios.get("/get-post");
+      const response = await axios.get(`/get-post/${page}`);
       // console.log(response.data);
       setPost(response.data)
 
@@ -70,6 +80,7 @@ function dashboard() {
       });
 
       setImageDetails({})
+      setPage(1)
 
 
 
@@ -219,6 +230,35 @@ function dashboard() {
   }
 
 
+  const totalPost = async()=>{
+    try {
+      const {data} = await axios.get("/total-post")
+      console.log(data);
+
+      setTotalPosts(data)
+
+    } catch (error) {
+      
+    }
+  }
+  
+
+  const handleCommentDelete = async (postId, comment) => {
+
+    try {
+        console.log(postId, comment);
+
+
+        const { data } = await axios.put("/delete-comment", { postId, comment })
+        
+        setPost(data)
+        getPost()
+     
+    } catch (error) {
+
+    }
+}
+
 
   return (
 
@@ -250,8 +290,10 @@ function dashboard() {
           visibile = {visible}
           handleComment = {handleComment}
           setPost = {setPost}
+          handleCommentDelete = {handleCommentDelete}
  
-           />
+           /> 
+           <Pagination className="mt-5 w-100 col-md-4 offset-md-4" current={page} total={(totalPosts /5 ) * 10} onChange={(value) => setPage(value)}/>
           </div>
           {/* <pre>{JSON.stringify(post, null, 4)}</pre> */}
           <div className="col-md-4 sidebar ">

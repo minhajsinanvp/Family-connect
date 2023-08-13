@@ -19,7 +19,7 @@ import Link from 'next/link';
 
 
 
-function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentDelete}) {
+function Post({post,handleComment,handleLike,handleUnLike, count=5, handleCommentDelete}) {
     const [modalVisible, setModalVisible] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState(null);
   const [state, setState] = useContext(userContext)
@@ -115,7 +115,7 @@ function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentD
     </div>
 
     {post.comments && post.comments.length>0 &&  (
-      <ol className='list-group mt-1 '>
+      <ol className='list-group mt-1'>
        { post.comments.slice(0,count).map(comment =>(
         <li key={comment._id} className='list-group-item d-flex justify-content-between align-item-start'>
         <div className='ms-2 me-auto'>
@@ -131,7 +131,7 @@ function Post({post,handleComment,handleLike,handleUnLike, count, handleCommentD
         <span className='d-flex badge rounded-pill text-muted'>
         {moment(comment.created).fromNow()} {state && state.user._id == comment.userId._id && (
           <div className='d-flex ml-auto mx-2 '>
-            {handleCommentDelete && <DeleteOutlined onClick={()=>{handleCommentDelete(post._id, comment)}} style={{ fontSize: '20px'}}  className=' text-danger' />}
+        <DeleteOutlined onClick={()=>{handleCommentDelete(post._id, comment)}} style={{ fontSize: '20px'}}  className=' text-danger' />
           </div>
         )}
         </span>
