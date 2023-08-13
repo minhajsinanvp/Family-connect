@@ -598,3 +598,25 @@ module.exports.CountPost= async(req,res)=>{
         
     }
 }
+
+
+module.exports.findUser = async(req,res)=>{
+    try {
+        const userName = req.params.user
+
+        if(!userName) return;
+
+        try {
+            const user = await User.find({$or: [
+                {name: {$regex : userName, $options: 'i'}},
+                {userName :{$regex : userName, $options: 'i'}}
+            ]}).select('-password -secret')
+
+        res.json(user)
+        } catch (error) {
+            console.log(error);
+        }
+    } catch (error) {
+        
+    }
+}

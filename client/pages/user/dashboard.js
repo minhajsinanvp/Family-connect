@@ -10,6 +10,7 @@ import PostList from "../../components/PostList";
 import SideBar from "../../components/SideBar";
 import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
+import Search from "../../components/Search";
 
 
 
@@ -297,7 +298,8 @@ function dashboard() {
           </div>
           {/* <pre>{JSON.stringify(post, null, 4)}</pre> */}
           <div className="col-md-4 sidebar ">
-          {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" mt-2 btn btn-info d-flex justify-content-center h6 text-decoration-none">Following : {state.user.following.length}</a></Link>}
+          <Search />
+          {state && state.user.following && <Link legacyBehavior href={`/user/following`}><a className=" text-info mt-2  h6 text-decoration-none">{state.user.following.length} Following</a></Link>}
             <SideBar peopleData={people} handleFollow={handleFollow} />
           </div>
         </div>
