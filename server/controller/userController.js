@@ -251,7 +251,7 @@ module.exports.userPosts = async (req, res) => {
     // console.log(req.auth._id);
 
     try {
-        console.log(req.params.page);
+        // console.log(req.params.page);
         // const posts = await Post.find({ userId: req.auth._id })
         const user = await User.findById(req.auth._id)
         const following = user.following
@@ -629,6 +629,48 @@ module.exports.userProfile = async(req,res)=>{
         res.json(user)
         
     } catch (error) {
+        
+    }
+}
+
+
+
+module.exports.homePosts = async(req,res)=>{
+
+    try {
+
+        const posts =  await Post.find()
+        .populate("userId", "_id name image")
+        .populate("comments.userId", "_id name image")
+        .select("-comments")
+        .sort({createdAt : -1})
+        .limit(10)
+
+        res.json(posts)
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
+module.exports. getPost = async(req,res)=>{
+
+    try {
+
+        const post = await Post.findById(req.params.id)
+        .populate("userId", "_id name image")
+        .populate("comments.userId", "_id name image")
+        .select("-comments")
+
+        res.json(post)
+        
+    } catch (error) {
+
+        console.log(error);
         
     }
 }

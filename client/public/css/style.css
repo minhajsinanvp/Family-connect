@@ -172,3 +172,16 @@ body{
     height: 200px;
     overflow: auto;
   }
+
+
+  .home-title{
+    /* background-image: url("../images/home.png"); */
+    background-attachment: fixed;
+    padding: 100px 0px 75px 0px;
+    background-repeat: no-repeat;
+    background-size: cover;
+   
+    color: #000000;
+    background-position: center center;
+    display: block;
+  }
