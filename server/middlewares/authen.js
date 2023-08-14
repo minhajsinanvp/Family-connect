@@ -61,3 +61,18 @@ module.exports.removeFollower = async(req,res,next)=>{
         console.log(error);
     }
 }
+
+
+
+module.exports.isAdmin = async(req,res,next)=>{
+
+    const user = await User.findById(req.auth._id);
+
+    if(user.role !=="admin"){
+        return res.status(400).send("unAuthorized error")
+    }
+
+    else{
+        next ()
+    }
+}

@@ -15,7 +15,7 @@ const io = require('socket.io')(http, {
         allowedHeaders: ["Content-Type"],
     }
 });
-
+ 
 // Database connection establishment
 mongoose.connect(process.env.dataBaseUrl, {
     useNewUrlParser: true,
@@ -33,8 +33,19 @@ app.use(cors({
 app.use("/api", router);
 
 io.on("connect", (socket) => {
-    console.log("Socket ID: ", socket.id);
-});
+    socket.on("new-post", (post) =>{ 
+        // console.log(message);
+       
+        socket.broadcast.emit("new-post", post)
+    })
+ 
+}); 
+
+
+
+
+
+
 
 const port = process.env.port || 3000;
 http.listen(port, () => {

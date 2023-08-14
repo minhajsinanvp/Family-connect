@@ -213,8 +213,16 @@ module.exports.creatPost = async (req, res) => {
             image: imageDetails
         })
 
-        post.save();
-        res.json({ success: "Post created successfully", post })
+       await post.save();
+
+       const postUser = await Post.findById(post._id)
+       .populate(
+        "userId",
+        "-password -secret"
+       )
+
+        res.json(postUser)
+        // res.json({ success: "Post created successfully", post })
 
 
     } catch (error) {
@@ -230,7 +238,7 @@ module.exports.imageUpload = async (req, res) => {
     // console.log(req.files);
     try {
         const result = await cloudinary.uploader.upload(req.files.image.path)
-        console.log("Upload url image: ", result);
+        // console.log("Upload url image: ", result);
 
         res.json({
 

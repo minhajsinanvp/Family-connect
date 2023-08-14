@@ -12,7 +12,11 @@ import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
 import Search from "../../components/Search";
 
+import io from 'socket.io-client'
 
+const socket = io(process.env.NEXT_PUBLIC_SOCKETIO,{
+    reconnection: true
+})
 
 
 
@@ -82,6 +86,7 @@ function dashboard() {
 
       setImageDetails({})
       setPage(1)
+      socket.emit('new-post',response.data)
 
 
 

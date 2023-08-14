@@ -14,11 +14,25 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKETIO,{
 const Home = ({ posts }) => {
     const [state, setState] = useContext(userContext);
     const [user, setUser] = useState(false);
+    const [newPost, setNewPost] = useState([])
+
+
+    // useEffect(()=>{
+    //     socket.on('recieve-message',(newMessage)=>{
+    //         alert(newMessage)
+    //     })
+    // },[])
 
 
     useEffect(()=>{
-        console.log(socket)
-    },[])
+        socket.on("new-post",(newPost)=>{
+
+            setNewPost([newPost,...posts])
+
+        })
+    })
+
+    const collection = newPost.length >0 ? newPost : posts
 
     return (
         <>
@@ -35,8 +49,9 @@ const Home = ({ posts }) => {
             </Head>
             <Parallax url="/images/home.png" />
             <div className="container mt-5">
+           
                 <div className="row">
-                    {posts.map((post) => (
+                    {collection.map((post) => (
                         <div className="col-md-6" key={post._id}>
                             <Link  href={`/post/${post._id}`} legacyBehavior>
                                 

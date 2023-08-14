@@ -36,7 +36,12 @@ const userSchema = new mongoose.Schema({
     about:{},
     image: String,
     following:[{type: mongoose.Schema.ObjectId, ref: "User"}],
-    followers:[{type: mongoose.Schema.ObjectId, ref: "User"}]
+    followers:[{type: mongoose.Schema.ObjectId, ref: "User"}],
+
+    role:{
+        type: String,
+        default : "user"
+    }
 
 },{
     timestamps: true
